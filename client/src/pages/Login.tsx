@@ -1,19 +1,38 @@
-import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
 import { motion } from "framer-motion";
 import CustomErrorMsg from "./../components/CustomErrorMsg";
-import { useNavigate } from "react-router-dom";
 import { LoginValidateYupSchema } from "./../validations/validationsSchema";
-
+import { Link, useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import API from "../services/API";
 const initialValues = { email: "", password: "" };
 
 function Login() {
+  const navigate = useNavigate();
+
+  const mutation = useMutation({
+    mutationFn: (values: {
+      email: string;
+      password: string;
+    }) => {
+      console.log(values)
+      return API.post('/auth/login', values)
+    },
+    onSuccess: (data, variables, context) => {
+      alert("User loggedin successfully!")
+      navigate('/home')
+    },
+    onError: (error, variables, context) => {
+       alert(error.message)
+    },
+  })
+
+
+
+
   const onSubmit = async (values: { email: string; password: string }) => {
-    console.log(values);
     try {
-      // dispatch
-      // navigate("/home");
+      mutation.mutate(values)
     } catch (error) {
       console.error(error);
     }

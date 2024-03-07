@@ -4,8 +4,30 @@ import { motion } from "framer-motion";
 import CustomErrorMsg from "./components/CustomErrorMsg";
 import { signUpValidateYupSchema } from "./validations/validationsSchema";
 import { Link, useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import API from "./services/API";
 const initialValues = { email: "", password: "", ConfirmPassword: "" };
 function App() {
+  const navigate = useNavigate();
+
+  const mutation = useMutation({
+    mutationFn: (values: {
+      email: string;
+      password: string;
+      ConfirmPassword: string;
+    }) => {
+      console.log(values)
+      return API.post('/auth/register', values)
+    },
+    onSuccess: (data, variables, context) => {
+      alert("User registered successfully!")
+      navigate('/login')
+    },
+    onError: (error, variables, context) => {
+       alert(error.message)
+    },
+  })
+
   const onSubmit = async (values: {
     email: string;
     password: string;
@@ -14,9 +36,8 @@ function App() {
     if (values.password !== values.ConfirmPassword) {
       alert("Please Enter same password");
     }
-    console.log(values);
     try {
-      // navigate("/home");
+      mutation.mutate(values);
     } catch (error) {
       console.error(error);
     }

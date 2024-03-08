@@ -1,18 +1,24 @@
 import React from "react";
 import { Formik, Form, Field } from "formik";
 import { motion } from "framer-motion";
-import CustomErrorMsg from "./components/CustomErrorMsg";
+import CustomErrorMsg from "./components/shared/CustomErrorMsg";
 import { signUpValidateYupSchema } from "./validations/validationsSchema";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import API from "./services/API";
 import toast from "react-hot-toast";
-const initialValues = { email: "", password: "", ConfirmPassword: "" };
+const initialValues = {
+  userName: "",
+  email: "",
+  password: "",
+  ConfirmPassword: "",
+};
 function App() {
   const navigate = useNavigate();
 
   const mutation = useMutation({
     mutationFn: (values: {
+      userName: string;
       email: string;
       password: string;
       ConfirmPassword: string;
@@ -30,6 +36,7 @@ function App() {
   });
 
   const onSubmit = async (values: {
+    userName: string;
     email: string;
     password: string;
     ConfirmPassword: string;
@@ -61,6 +68,25 @@ function App() {
               validationSchema={signUpValidateYupSchema}
             >
               <Form className="space-y-6" action="#" method="POST">
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    user name
+                  </label>
+                </div>
+                <div className="mt-1">
+                  <Field
+                    id="name"
+                    name="name"
+                    type="string"
+                    autoComplete="name"
+                    required
+                    className="appearance-none block w-full  px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-custom-darkblue1 focus:border-custom-darkblue1 sm:text-sm"
+                  />
+                  <CustomErrorMsg name={"name"} />
+                </div>
                 <div>
                   <label
                     htmlFor="email"

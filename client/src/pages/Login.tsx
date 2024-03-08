@@ -1,6 +1,6 @@
 import { Formik, Form, Field } from "formik";
 import { motion } from "framer-motion";
-import CustomErrorMsg from "./../components/CustomErrorMsg";
+import CustomErrorMsg from "../components/shared/CustomErrorMsg";
 import { LoginValidateYupSchema } from "./../validations/validationsSchema";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
@@ -12,13 +12,18 @@ function Login() {
   const navigate = useNavigate();
 
   const mutation = useMutation({
-    mutationFn: (values: { email: string; password: string }) => {
+    mutationFn: async (values: { email: string; password: string }) => {
       console.log(values);
-      return API.post("/auth/login", values);
+      const data = await API.post("/auth/login", values);
+      return data;
     },
-    onSuccess: (data, variables, context) => {
+    onSuccess: async (data: any, variables, context) => {
+      console.log(data.data);
+      await localStorage.setItem("token", data?.data?.token);
+      if (localStorage.getItem("token") !== "") {
+        navigate("/home");
+      }
       toast.success("User loggedin successfully!");
-      navigate("/home");
     },
     onError: (error, variables, context) => {
       toast.error("something went wrong");

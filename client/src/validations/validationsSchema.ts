@@ -25,3 +25,14 @@ export const signUpValidateYupSchema = Yup.object({
     )
     .required("Password is Required!"),
 });
+
+export const postValidationSchema = Yup.object({
+  title: Yup.string()
+    .required("Please enter a title for your post.")
+    .min(3, "Title must be at least 3 characters long.")
+    .max(255, "Title cannot exceed 255 characters."),
+  content: Yup.string()
+    .required("Please enter content for your post.")
+    .min(10, "Content must be at least 10 characters long."),
+  poster: Yup.mixed(),
+});

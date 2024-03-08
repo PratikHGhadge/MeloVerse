@@ -29,7 +29,7 @@ class PostController {
         path: "user",
         select: { userName: 1, _id: 1 },
       });
-      res.status(200).json({ success: true, posts });
+      res.status(200).send(posts);
     } catch (error) {
       console.error(error);
       res.status(500).json({

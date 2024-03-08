@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { sidebarLinks } from "./../constants";
+import { sidebarLinks } from "../../constants";
 import { motion } from "framer-motion";
 
 function LeftSidebar() {

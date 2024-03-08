@@ -4,7 +4,7 @@ function Topbar() {
   return (
     <nav className="topbar">
       <Link
-        to="/"
+        to="/home"
         className="flex items-center gap-4 border border-white px-4 rounded-lg"
       >
         {/* <img src={"/assets/logo.svg"} alt="logo" width={28} height={28}></img> */}

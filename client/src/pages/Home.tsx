@@ -1,13 +1,11 @@
-import React from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import API from "../services/API";
-
 import Layout from "../components/Layout";
+import Posts from "./Posts";
 function Home() {
-   
   return (
     <div>
-      <Layout>{"this is posts page"}</Layout>
+      <Layout>
+        <Posts />
+      </Layout>
     </div>
   );
 }

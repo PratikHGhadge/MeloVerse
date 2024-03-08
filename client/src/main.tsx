@@ -8,6 +8,8 @@ import Login from "./pages/Login.js";
 import Home from "./pages/Home.js";
 import UnavilablePage from "./components/UnavilablePage.js";
 import { Toaster } from "react-hot-toast";
+import ProtectedRoute from "./components/shared/ProtectedRoute.js";
+import CreatePost from "./pages/CreatePost.js";
 
 const router = createBrowserRouter([
   {
@@ -20,27 +22,51 @@ const router = createBrowserRouter([
   },
   {
     path: "/home",
-    element: <Home />,
+    element: (
+      // <ProtectedRoute>
+      <Home />
+      // </ProtectedRoute>
+    ),
   },
   {
     path: "/search",
-    element: <UnavilablePage />,
+    element: (
+      <ProtectedRoute>
+        <UnavilablePage />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/activity",
-    element: <UnavilablePage />,
+    element: (
+      <ProtectedRoute>
+        <UnavilablePage />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/create-post",
-    element: <UnavilablePage />,
+    element: (
+      // <ProtectedRoute>
+      <CreatePost />
+      // </ProtectedRoute>
+    ),
   },
   {
     path: "/communities",
-    element: <UnavilablePage />,
+    element: (
+      <ProtectedRoute>
+        <UnavilablePage />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/profile",
-    element: <UnavilablePage />,
+    element: (
+      <ProtectedRoute>
+        <UnavilablePage />
+      </ProtectedRoute>
+    ),
   },
 ]);
 const queryClient = new QueryClient({

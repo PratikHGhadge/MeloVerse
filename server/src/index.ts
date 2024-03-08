@@ -15,6 +15,7 @@ connectDB();
 // middlewares
 app.use(express.json());
 app.use(cors());
+app.use(express.static("public"));
 
 // Your server routes
 app.use("/api/v1/auth", authRoutes);

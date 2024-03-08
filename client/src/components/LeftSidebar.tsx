@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { sidebarLinks } from "./../constants";
+import { motion } from "framer-motion";
 
 function LeftSidebar() {
   const pathname = useLocation();
@@ -13,18 +14,23 @@ function LeftSidebar() {
             pathname.pathname === link.route;
           return (
             <div key={index} className="text-white">
-              <Link
-                to={link.route}
-                className={`leftsidebar_link ${isActive && "bg-primary-500"}`}
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <img
-                  src={link.imgURL}
-                  alt="sidebarlogos"
-                  width={24}
-                  height={24}
-                ></img>
-                <p className="max-lg:hidden text-light-1"> {link.label} </p>
-              </Link>
+                <Link
+                  to={link.route}
+                  className={`leftsidebar_link ${isActive && "bg-primary-500"}`}
+                >
+                  <img
+                    src={link.imgURL}
+                    alt="sidebarlogos"
+                    width={24}
+                    height={24}
+                  ></img>
+                  <p className="max-lg:hidden text-light-1"> {link.label} </p>
+                </Link>
+              </motion.div>
             </div>
           );
         })}

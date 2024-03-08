@@ -7,6 +7,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Login from "./pages/Login.js";
 import Home from "./pages/Home.js";
 import UnavilablePage from "./components/UnavilablePage.js";
+import { Toaster } from "react-hot-toast";
 
 const router = createBrowserRouter([
   {
@@ -52,6 +53,7 @@ const queryClient = new QueryClient({
 ReactDOM.createRoot(document.getElementById("root")!).render(
   // <React.StrictMode>
   <QueryClientProvider client={queryClient}>
+    <Toaster position="top-right" reverseOrder={false}></Toaster>
     <RouterProvider router={router} />
     <ReactQueryDevtools initialIsOpen={false} />
   </QueryClientProvider>

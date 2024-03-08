@@ -5,34 +5,29 @@ import { LoginValidateYupSchema } from "./../validations/validationsSchema";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import API from "../services/API";
+import toast from "react-hot-toast";
 const initialValues = { email: "", password: "" };
 
 function Login() {
   const navigate = useNavigate();
 
   const mutation = useMutation({
-    mutationFn: (values: {
-      email: string;
-      password: string;
-    }) => {
-      console.log(values)
-      return API.post('/auth/login', values)
+    mutationFn: (values: { email: string; password: string }) => {
+      console.log(values);
+      return API.post("/auth/login", values);
     },
     onSuccess: (data, variables, context) => {
-      alert("User loggedin successfully!")
-      navigate('/home')
+      toast.success("User loggedin successfully!");
+      navigate("/home");
     },
     onError: (error, variables, context) => {
-       alert(error.message)
+      toast.error("something went wrong");
     },
-  })
-
-
-
+  });
 
   const onSubmit = async (values: { email: string; password: string }) => {
     try {
-      mutation.mutate(values)
+      mutation.mutate(values);
     } catch (error) {
       console.error(error);
     }
@@ -43,6 +38,13 @@ function Login() {
       <div className="pt-20 h-[100vh] sm:mx-auto sm:w-full mx-2  sm:max-w-md  bg-dark">
         <div className="bg-gray-50 shadow rounded-3xl px-4">
           <div className="min-h-auto py-10 bg-gray-50 rounded-3xl flex flex-col justify-center sm:px-6 ">
+            <div className="sm:mx-auto sm:w-full sm:max-w-md ">
+              <h2 className="mb-6  py-4  rounded-lg bg-gray-100 text-center text-gray-700 text-3xl font-bold ">
+                <p className="text-heading3-bold text-black-1 max-xs:hidden text-bold">
+                  Login to MELOVERSE
+                </p>
+              </h2>
+            </div>
             <Formik
               initialValues={initialValues}
               onSubmit={onSubmit}
@@ -93,7 +95,7 @@ function Login() {
                   <div className="text-sm">
                     <Link
                       to="/forgot-password"
-                      className="font-medium text-red-600 hover:text-custom-darkred4"
+                      className="font-medium text-bg-primary-500 hover:text-custom-darkred4"
                     >
                       Forgot your password?
                     </Link>
@@ -106,7 +108,7 @@ function Login() {
                 >
                   <button
                     type="submit"
-                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 hover:bg-custom-darkred4 "
+                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white  bg-primary-500 hover:bg-custom-darkred4 "
                   >
                     Log in
                   </button>
@@ -124,7 +126,7 @@ function Login() {
             </Link>
 
             <div className="mt-6">
-              <div className="relative">
+              {/* <div className="relative">
                 <div className="absolute inset-0 flex items-center">
                   <div className="border border-gray-300 w-full"></div>
                 </div>
@@ -152,7 +154,7 @@ function Login() {
                     </svg>
                   </button>
                 </motion.div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

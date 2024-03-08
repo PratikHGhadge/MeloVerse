@@ -55,3 +55,14 @@ JWT tokens are generated with appropriate payload and expiration time upon succe
 
 ```bash
 git clone [repository URL]
+```
+## screenshots
+![Screenshot from 2024-03-08 22-23-51](https://github.com/PratikHGhadge/MeloVerse/assets/93422248/4bc178aa-994e-417e-906c-0c7a6ae0ae9c)
+
+![Screenshot from 2024-03-08 22-23-56](https://github.com/PratikHGhadge/MeloVerse/assets/93422248/9e880faa-e46a-4bc6-9350-279ac27ba075)
+
+![Screenshot from 2024-03-08 22-24-18](https://github.com/PratikHGhadge/MeloVerse/assets/93422248/eb6dbe63-8ff3-4c30-8181-dbde5a3b8f6b)
+
+![Screenshot from 2024-03-08 22-24-24](https://github.com/PratikHGhadge/MeloVerse/assets/93422248/36cb53bf-827c-43fc-a0c8-ad6465262494)
+
+

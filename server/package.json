@@ -14,10 +14,7 @@
   "dependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.17",
-    "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.6",
-    "@types/mongoose": "^5.11.97",
-    "@types/node": "^20.11.24",
     "bcrypt": "^5.1.1",
     "cloudinary": "^2.0.3",
     "cors": "^2.8.5",
@@ -29,7 +26,11 @@
     "typescript": "^5.3.3"
   },
   "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/express-rate-limit": "^6.0.0",
+    "@types/mongoose": "^5.11.97",
     "@types/multer": "^1.4.11",
+    "@types/node": "^20.11.25",
     "@types/nodemon": "^1.19.6",
     "nodemon": "^3.1.0",
     "ts-node": "^10.9.2",

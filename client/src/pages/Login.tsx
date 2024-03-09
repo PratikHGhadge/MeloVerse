@@ -13,20 +13,18 @@ function Login() {
 
   const mutation = useMutation({
     mutationFn: async (values: { email: string; password: string }) => {
-      console.log(values);
-      const data = await API.post("/auth/login", values);
+      const data = await API.post("/api/v1/auth/login", values);
       return data;
     },
     onSuccess: async (data: any, variables, context) => {
-      console.log(data.data);
       await localStorage.setItem("token", data?.data?.token);
       if (localStorage.getItem("token") !== "") {
         navigate("/home");
       }
-      toast.success("User loggedin successfully!");
+      toast.success("User logged in successfully!");
     },
     onError: (error, variables, context) => {
-      toast.error("something went wrong");
+      toast.error("something went wrong please try agin");
     },
   });
 

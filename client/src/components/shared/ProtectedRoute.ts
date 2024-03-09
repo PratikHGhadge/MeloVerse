@@ -7,7 +7,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   // get user current
   const getCurrentUser = async () => {
-    const data = await API.get("/auth/currentuser");
+    const data = await API.get("/api/v1/auth/currentuser");
     return data;
   };
 
@@ -27,4 +27,6 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
     navigate("/login");
   }
 }
+
+
 export default ProtectedRoute;

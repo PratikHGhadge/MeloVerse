@@ -2,8 +2,16 @@ import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { sidebarLinks } from "../../constants";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 function LeftSidebar() {
+  const navigate = useNavigate();
+  const logout = () => {
+    localStorage.clear();
+    navigate("/login");
+    toast.success("user logged out successfully.....");
+  };
   const pathname = useLocation();
   return (
     <section className="custom-scrollbar leftsidebar">
@@ -35,15 +43,17 @@ function LeftSidebar() {
           );
         })}
         <div className="mt-10">
-          <div className="flex cursor-pointer gap-4 p-4">
-            <img
-              src="/assets/logout.svg"
-              alt="logout"
-              width={24}
-              height={24}
-            ></img>
-            <p className="text-light-1">Logout</p>
-          </div>
+          <button onClick={logout}>
+            <div className="flex cursor-pointer gap-4 p-4">
+              <img
+                src="/assets/logout.svg"
+                alt="logout"
+                width={24}
+                height={24}
+              ></img>
+              <p className="text-light-1">Logout</p>
+            </div>
+          </button>
         </div>
       </div>
     </section>

@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import React, { useEffect } from "react";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import API from "../services/API";
+import { useInView } from "react-intersection-observer";
+import { motion } from "framer-motion";
 import Spinner from "../components/shared/Spinner";
 
 interface Post {
@@ -21,40 +23,61 @@ interface Post {
 }
 
 const Posts: React.FC = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const getPosts = async () => {
-    const data: any = await API.get<Post[]>("/post/get-posts");
+  const { ref, inView } = useInView();
+  const fetchPosts = async ({ pageParam }: { pageParam: number }) => {
+    const data = await API.get(`/api/v1/post/get-posts?page=${pageParam}`);
     return data.data;
   };
-  const { isLoading, error, data } = useQuery({
-    queryKey: [],
-    queryFn: getPosts,
-    staleTime: 10000,
+  const {
+    data,
+    status,
+    error,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["posts"],
+    queryFn: fetchPosts,
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages) => {
+      const nextPage = lastPage.length ? allPages.length + 1 : undefined;
+      return nextPage;
+    },
   });
 
   useEffect(() => {
-    if (data) {
-      setPosts(data);
+    if (inView && hasNextPage) {
+      console.log("Fire!");
+      fetchNextPage();
     }
-  }, [data]);
+  }, [inView, hasNextPage, fetchNextPage]);
 
-  if (error) return <p>Error fetching posts: {error.message}</p>;
+  if (status === "pending") {
+    return <Spinner></Spinner>;
+  }
+
+  if (status === "error") {
+    return <p>Error: {error.message}</p>;
+  }
 
   return (
     <>
-      <div className="bg-black">
-        {isLoading ? (
-          <Spinner></Spinner>
-        ) : (
-          <div className="container mx-auto px-4 py-8">
-            {" "}
-            {/* Center content with padding */}
-            <h2 className="text-3xl text-white font-bold mb-4">Posts</h2>
-            {posts &&
-              posts.map((post: Post) => (
+      <div>
+        <div className="container mx-auto px-4 py-8">
+          <h2 className="text-3xl text-white font-bold mb-4">Posts</h2>
+          {/* {console.log(data.pages) as any} */}
+          {data.pages.map((posts: Post[]) =>
+            posts.map((post: Post) => (
+              <motion.div
+                key={post._id}
+                className="hover:bg-gray-700 bg-gray-900 rounded-lg p-4 mb-4 shadow-md "
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
                 <div
                   key={post._id}
-                  className="bg-gray-700 hover:bg-gray-900 rounded-lg p-4 mb-4 shadow-md " // Post container styling
+                  className="hover:bg-gray-700 bg-gray-900 rounded-lg p-4 mb-4 shadow-md " // Post container styling
                 >
                   <div className="flex items-center mb-2">
                     <img
@@ -64,7 +87,7 @@ const Posts: React.FC = () => {
                       alt="User avatar"
                     />
                     <p className="text-white text-lg font-semibold">
-                      {post.user.userName}
+                      {post?.user?.userName}
                     </p>
                   </div>
                   <h3 className="text-white text-xl font-bold mb-2">
@@ -73,18 +96,16 @@ const Posts: React.FC = () => {
                   <p className="text-white text-base">{post.content}</p>
                   {/* Image display */}
                   <img
-                    src={`http://localhost:3000/${post.poster}`} // Construct image URL
-                    alt={post.title} // Add appropriate alt attribute
-                    onError={(event) => {
-                      //   event.target.src = "/default-image.png"; // Optional: Default image on error
-                    }}
-                    className="w-full rounded-lg mt-4" // Image styling
+                    src={`${import.meta.env.VITE_BASE_URL}/${post.poster}`}
+                    onError={(event) => {}}
+                    className="w-full rounded-lg mt-4"
                   />
                 </div>
-              ))}
-          </div>
-        )}{" "}
-        {/* Set background color to black */}
+              </motion.div>
+            ))
+          )}
+          <div ref={ref}>{isFetchingNextPage && <Spinner></Spinner>}</div>
+        </div>
       </div>
     </>
   );

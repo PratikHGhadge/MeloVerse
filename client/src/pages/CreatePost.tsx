@@ -1,50 +1,71 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Formik, Form, Field } from "formik";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { postValidationSchema } from "../validations/validationsSchema";
 import API from "../services/API";
 import toast from "react-hot-toast";
 import Layout from "../components/Layout";
+import CustomErrorMsg from "../components/shared/CustomErrorMsg";
 interface Post {
   title: string;
   content: string;
-  poster: File | null;
 }
+
 const initialValues = {
   title: "",
   content: "",
-  poster: null,
 };
 
 function CreatePost() {
+  const [poster, setPoster] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const navigate = useNavigate();
+  const getCurrentUser = async () => {
+    const data = await API.get("/api/v1/auth/currentuser");
+    return data.data;
+  };
+
+  const { data } = useQuery({
+    queryKey: [],
+    queryFn: getCurrentUser,
+    // staleTime: 10000,
+  });
 
   const mutation = useMutation({
-    mutationFn: async (values: Post) => {
-      const data = API.post("/post/create-post", values);
+    mutationFn: async (values: any) => {
+      const data = API.post("/api/v1/post/create-post", values, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       return data;
     },
-    onSuccess: (data, variables, context) => {
+    onSuccess: () => {
       toast.success("Post created successfully!");
-      navigate("/home"); // Redirect to home or relevant page
+      navigate("/home");
     },
-    onError: (error, variables, context) => {
+    onError: (error) => {
       toast.error(error.message);
     },
   });
 
   const handleImageChange = (event: any) => {
     const file = event.target.files[0];
+    setPoster(file);
     setImagePreview(URL.createObjectURL(file) as string | null);
   };
 
   const onSubmitPost = async (values: Post) => {
-    console.log(values);
     try {
-      await mutation.mutate(values);
+      const formData = new FormData();
+      formData.append("poster", poster!!);
+      formData.append("title", values.title);
+      formData.append("content", values.content);
+      console.log(JSON.stringify(data));
+      formData.append("user", data.user.id);
+      await mutation.mutateAsync(formData);
     } catch (error) {
       console.error(error);
     }
@@ -55,6 +76,7 @@ function CreatePost() {
       <p className="mb-8 ml-2 text-bold font-bold text-heading3-bold text-light-1 max-xs:hidden text-bold">
         Create Post
       </p>
+      {/* {console.log(data) as any} */}
       <div>
         <Formik
           initialValues={initialValues}
@@ -75,6 +97,7 @@ function CreatePost() {
                   required
                   className="appearance-none bg-slate-700 block w-full  px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-custom-darkblue1 focus:border-custom-darkblue1 sm:text-sm"
                 />
+                <CustomErrorMsg name={"title"} />
               </div>
             </div>
 
@@ -93,6 +116,7 @@ function CreatePost() {
                   required
                   className="appearance-none block w-full bg-slate-700 px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-custom-darkblue1 focus:border-custom-darkblue1 sm:text-sm"
                 />
+                <CustomErrorMsg name={"content"} />
               </div>
             </div>
 
@@ -109,6 +133,7 @@ function CreatePost() {
                   onChange={handleImageChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-custom-darkblue1 focus:border-custom-darkblue1 sm:text-sm"
                 />
+                <CustomErrorMsg name={"poster"} />
               </div>
               {imagePreview && (
                 <img

@@ -10,6 +10,7 @@ import UnavilablePage from "./components/UnavilablePage.js";
 import { Toaster } from "react-hot-toast";
 import ProtectedRoute from "./components/shared/ProtectedRoute.js";
 import CreatePost from "./pages/CreatePost.js";
+import ForgotPassword from "./pages/ForgotPassword.js";
 
 const router = createBrowserRouter([
   {
@@ -23,9 +24,9 @@ const router = createBrowserRouter([
   {
     path: "/home",
     element: (
-      // <ProtectedRoute>
-      <Home />
-      // </ProtectedRoute>
+      <ProtectedRoute>
+        <Home />
+      </ProtectedRoute>
     ),
   },
   {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
         <UnavilablePage />
       </ProtectedRoute>
     ),
+  },
+  {
+    path: "/forgot-password",
+    element: <ForgotPassword></ForgotPassword>,
   },
   {
     path: "/activity",
@@ -47,9 +52,9 @@ const router = createBrowserRouter([
   {
     path: "/create-post",
     element: (
-      // <ProtectedRoute>
-      <CreatePost />
-      // </ProtectedRoute>
+      <ProtectedRoute>
+        <CreatePost />
+      </ProtectedRoute>
     ),
   },
   {

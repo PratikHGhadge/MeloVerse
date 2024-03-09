@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, response } from "express";
 import userModel from "./../models/User";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -19,7 +19,7 @@ class AuthController {
           message: "User already exists",
         });
       }
-      console.log(req.body);
+
       // Hash password securely
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
@@ -33,7 +33,7 @@ class AuthController {
       });
     } catch (error) {
       console.error(error);
-      // console.log(req.body)
+
       return res.status(500).json({
         message: "Error in register API",
       });
@@ -117,6 +117,50 @@ class AuthController {
         success: false,
         message: "Unable to get current user",
         error: "Internal server error",
+      });
+    }
+  }
+  static async forgotPasswordController(req: Request, res: Response) {
+    try {
+      const { email } = req.body;
+
+      // Await the findOne operation to ensure oldUser is populated
+      const oldUser: any = await userModel.findOne({ email: email });
+
+      if (!oldUser) {
+        return res.status(400).send({
+          success: false,
+          message: "User with this email does not exist",
+        });
+      }
+
+      const secret = process.env.JWT_SECRET + oldUser.password;
+      const token = jwt.sign(
+        { email: oldUser.email, id: oldUser._id },
+        secret,
+        { expiresIn: "5m" }
+      );
+      const link = `http://localhost:3000/reset-password/${oldUser._id}/${token}`;
+
+      return response.status(200).send(link);
+    } catch (error) {
+      console.error(error);
+      // Optionally check for specific database errors here
+      res.status(500).send({
+        success: false,
+        error: "Internal server error in forgot password",
+      });
+    }
+  }
+
+  static async resetPasswordController(req: Request, res: Response) {
+    try {
+      const { id, token } = req.params;
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({
+        success: false,
+        error: "Internal server error in reset password",
       });
     }
   }

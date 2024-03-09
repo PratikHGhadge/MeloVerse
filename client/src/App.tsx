@@ -23,8 +23,7 @@ function App() {
       password: string;
       ConfirmPassword: string;
     }) => {
-      console.log(values);
-      return API.post("/auth/register", values);
+      return API.post("/api/v1/auth/register", values);
     },
     onSuccess: (data, variables, context) => {
       toast.success("User registered successfully!");

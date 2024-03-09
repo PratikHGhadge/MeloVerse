@@ -8,6 +8,9 @@ export const LoginValidateYupSchema = Yup.object({
     )
     .required("Password is Required!"),
 });
+export const emailValidateYupSchema = Yup.object({
+  email: Yup.string().email("Enter the valid email address"),
+});
 
 export const signUpValidateYupSchema = Yup.object({
   userName: Yup.string(),

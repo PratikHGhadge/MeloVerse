@@ -1,4 +1,3 @@
-import React from "react";
 import { Formik, Form, Field } from "formik";
 import { motion } from "framer-motion";
 import CustomErrorMsg from "./components/shared/CustomErrorMsg";
